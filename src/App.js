@@ -1,6 +1,6 @@
 import "./App.css";
 
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import startCase from "lodash.startcase";
 
 import { Octokit } from "@octokit/rest";
@@ -22,16 +22,6 @@ const TEMPLATE_REPO_NAME = "boilerplate";
 
 function App() {
   const [names, setNames] = useState([]);
-  const [selectedName, setSelectedName] = useState(null);
-
-  const messageEventHandler = useCallback(
-    (event) => {
-      if (event.data === "close") {
-        setSelectedName(null);
-      }
-    },
-    [setSelectedName]
-  );
 
   useEffect(() => {
     (async () => {
@@ -46,50 +36,31 @@ function App() {
     })();
   }, []);
 
-  useEffect(() => {
-    window.addEventListener("message", messageEventHandler, false);
-
-    return () => {
-      window.removeEventListener("message", messageEventHandler, false);
-    };
-  }, [messageEventHandler]);
-
-  const titleSelectHandler = useCallback(
-    (name) => setSelectedName(name),
-    [setSelectedName]
-  );
-
   return (
     <div className="App">
-      {selectedName != null ? (
-        <iframe
-          src={`https://${GITHUB_USERNAME}.github.io/${selectedName}/`}
-          className="App-iframe"
-          title="Active title"
-        />
-      ) : null}
       {names.map((name) => (
-        <AppLink key={name} name={name} onTitleSelect={titleSelectHandler} />
+        <AppLink key={name} name={name} />
       ))}
     </div>
   );
 }
 
 function AppLink(props) {
-  const { name, onTitleSelect } = props;
+  const { name } = props;
 
   const displayedName = useMemo(() => {
     return startCase(decryptName(name));
   }, [name]);
 
-  const onClick = useCallback(() => {
-    onTitleSelect(name);
-  }, [name, onTitleSelect]);
-
   return (
-    <div className="App-link" onClick={onClick}>
+    <a
+      className="App-link"
+      target="_blank"
+      rel="noopener noreferrer"
+      href={`https://${GITHUB_USERNAME}.github.io/${name}/`}
+    >
       {displayedName}
-    </div>
+    </a>
   );
 }
 
