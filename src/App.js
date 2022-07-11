@@ -1,6 +1,7 @@
 import "./App.css";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import startCase from "lodash.startcase";
 
 import { Octokit } from "@octokit/rest";
 
@@ -8,7 +9,7 @@ const octokit = new Octokit({
   auth: process.env.REACT_APP_GITHUB_ACCESS_TOKEN,
 });
 
-function getName(name) {
+function decryptName(name) {
   if (!name.startsWith("rev-")) {
     return name;
   }
@@ -53,6 +54,11 @@ function App() {
     };
   }, [messageEventHandler]);
 
+  const titleSelectHandler = useCallback(
+    (name) => setSelectedName(name),
+    [setSelectedName]
+  );
+
   return (
     <div className="App">
       {selectedName != null ? (
@@ -63,14 +69,26 @@ function App() {
         />
       ) : null}
       {names.map((name) => (
-        <div
-          key={name}
-          className="App-link"
-          onClick={() => setSelectedName(name)}
-        >
-          {getName(name)}
-        </div>
+        <AppLink key={name} name={name} onTitleSelect={titleSelectHandler} />
       ))}
+    </div>
+  );
+}
+
+function AppLink(props) {
+  const { name, onTitleSelect } = props;
+
+  const displayedName = useMemo(() => {
+    return startCase(decryptName(name));
+  }, [name]);
+
+  const onClick = useCallback(() => {
+    onTitleSelect(name);
+  }, [name, onTitleSelect]);
+
+  return (
+    <div className="App-link" onClick={onClick}>
+      {displayedName}
     </div>
   );
 }

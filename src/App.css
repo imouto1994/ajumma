@@ -41,8 +41,7 @@ body {
   background: black;
   color: white;
   line-height: 1.5;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Helvetica Neue", sans-serif;
+  font-family: "Open Sans", sans-serif;
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -118,13 +117,24 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .App-link {
   display: inline-block;
-  font-size: 32px;
-  background: #f368e0;
-  color: black;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   margin-right: 12px;
   margin-bottom: 24px;
-  padding: 12px 24px;
-  border-radius: 4px;
+  padding: 8px 24px;
+  background: linear-gradient(
+    45deg,
+    #3bade3 0%,
+    #576fe6 25%,
+    #9844b7 51%,
+    #ff357f 100%
+  );
+  box-shadow: 0 4px 15px 0 rgb(126 52 161 / 75%);
+  border-radius: 48px;
 }
 
 .App-iframe {
